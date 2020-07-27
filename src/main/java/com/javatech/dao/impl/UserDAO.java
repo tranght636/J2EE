@@ -23,7 +23,7 @@ public class UserDAO extends GenreicDAO<UserModel> implements IUserDAO {
 
 	@Override
 	public Integer save(UserModel userModel) {
-		String sql = "INSERT INTO `traineemanager`.`users` (`email`, `username`, `password`, `phone_number`, `address`, `dob`, `university`, `role_id`, `status`)  VALUES (?,?,?,?,?,?,?,?,?)";
+		String sql = "INSERT INTO users (`email`, `username`, `password`, `phone_number`, `address`, `dob`, `university`, `role_id`, `status`)  VALUES (?,?,?,?,?,?,?,?,?)";
 		return insert(sql, userModel.getEmail(), userModel.getUsername(), userModel.getPassword(), userModel.getPhoneNumber(), userModel.getAddress(), userModel.getDob(), userModel.getUniversity(), userModel.getRoleId(), userModel.getStatus());
 	}
 

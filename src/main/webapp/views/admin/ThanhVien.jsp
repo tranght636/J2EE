@@ -184,8 +184,8 @@
 			<%-- <c:if test="${not empty message}">
 				<div class="alert alert-${alert}">${message}</div>
 			</c:if> --%>
-
-			<form id="form-profile"
+<!-- id="form-profile" -->
+			<form 
 				action="/admin/thanh-vien?action=create_user"
 				method="POST">
 				<div class="form-group row"
