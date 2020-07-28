@@ -54,7 +54,9 @@ public class UserService implements IUserService {
 
 	@Override
 	public Integer createUser(UserModel userModel) {
-		userModel.setRoleId(SystemConstant.USER_ROLE_ID);
+		if(userModel.getRoleId() == null) {
+			userModel.setRoleId(SystemConstant.USER_ROLE_ID);
+		}
 		userModel.setStatus(SystemConstant.STATUS_ACTIVED);
 		return userDAO.save(userModel);
 	}

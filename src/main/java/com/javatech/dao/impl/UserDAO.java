@@ -183,7 +183,7 @@ public class UserDAO extends GenreicDAO<UserModel> implements IUserDAO {
 
 	@Override
 	public List<UserModel> findAllTrainees() {
-		String sql = "SELECT * FROM users WHERE status = 1 and role_id =2";
+		String sql = "SELECT * FROM users WHERE status = 1 and role_id in (2, 3)";
 		List<UserModel> users = query(sql, new UserModel());
 		return users;
 	}
