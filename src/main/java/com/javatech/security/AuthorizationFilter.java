@@ -17,6 +17,8 @@ import com.javatech.model.UserModel;
 import com.javatech.utils.SessionUtil;
 
 public class AuthorizationFilter implements Filter {
+	
+	private String[] urlPermit = {"/login" , "/register", "/template", "/img", "/quen-mat-khau", "/doi-mat-khau"};
 
     @SuppressWarnings("unused")
 	private ServletContext context;
@@ -24,6 +26,15 @@ public class AuthorizationFilter implements Filter {
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
         this.context = filterConfig.getServletContext();
+    }
+    
+    private Boolean urlStartWiths(String url, String... strs) {
+    	for (String str : strs) {
+			if(url.startsWith(str)) {
+				return true;
+			}
+		}
+    	return false;
     }
 
     @Override
@@ -35,7 +46,7 @@ public class AuthorizationFilter implements Filter {
         response.setContentType("application/json");
         String url = request.getRequestURI();
         System.out.println(url);
-        if(url.startsWith("/login") || url.startsWith("/register") || url.startsWith("/template") || url.startsWith("/img")) {
+        if(urlStartWiths(url, urlPermit)) {
         	filterChain.doFilter(servletRequest, servletResponse);
         	return;
         }

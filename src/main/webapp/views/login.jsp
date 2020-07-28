@@ -53,7 +53,7 @@
 								</form>
 								<hr>
 								<div class="text-center">
-									<a class="small" href="forgot-password.html">Forgot
+									<a class="small" href="/quen-mat-khau?action=quenmatkhau">Forgot
 										Password?</a>
 								</div>
 								<div class="text-center">

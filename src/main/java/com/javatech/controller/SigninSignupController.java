@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ResourceBundle;
 
 import javax.inject.Inject;
+import javax.mail.MessagingException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -14,19 +15,32 @@ import javax.servlet.http.HttpServletResponse;
 import com.javatech.constant.ActionConstant;
 import com.javatech.constant.SystemConstant;
 import com.javatech.constant.UrlConstant;
+import com.javatech.dto.CommonDTO;
+import com.javatech.entity.ResetPasswordEntity;
+import com.javatech.entity.UserEntity;
 import com.javatech.form.UserForm;
 import com.javatech.model.UserModel;
 import com.javatech.service.IUserService;
+import com.javatech.service2.ResetPasswordService;
+import com.javatech.service2.UserService;
 import com.javatech.utils.ConvertUtil;
 import com.javatech.utils.DispatcherUtil;
+import com.javatech.utils.MailUtil;
 import com.javatech.utils.SessionUtil;
+import com.javatech.utils.StringUtil;
 
-@WebServlet(urlPatterns = { "/login", "/register", "/logout", "/check-session" })
+@WebServlet(urlPatterns = { "/login", "/register", "/logout", "/check-session", "/quen-mat-khau", "/doi-mat-khau" })
 public class SigninSignupController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	@Inject
 	IUserService userService;
+	
+	@Inject
+	UserService userService2;
+	
+	@Inject
+	ResetPasswordService resetPasswordService;
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
@@ -44,8 +58,24 @@ public class SigninSignupController extends HttpServlet {
 			} else if (action.equals(ActionConstant.CHECK_SESSION)) {
 				getCheckSession(req, res);
 				return;
+			} else if (action.equals(ActionConstant.QUEN_MAT_KHAU)) {
+				getQuenMatKhau(req, res);
+				return;
+			} else if (action.equals(ActionConstant.DOI_MAT_KHAU)) {
+				getDoiMatKhau(req, res);
+				return;
 			}
 		}
+	}
+
+	private void getDoiMatKhau(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+		setMessage(req);
+		DispatcherUtil.returnViewName(req, res, "DoiMatKhau");
+	}
+
+	private void getQuenMatKhau(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+		setMessage(req);
+		DispatcherUtil.returnViewName(req, res, "QuenMatKhau");
 	}
 
 	@Override
@@ -58,10 +88,39 @@ public class SigninSignupController extends HttpServlet {
 			} else if(action.equals(ActionConstant.REGISTER)) {
 				postRegister(req, res);
 				return;
+			} else if(action.equals(ActionConstant.QUEN_MAT_KHAU)) {
+				try {
+					postQuenMatKhau(req, res);
+				} catch (ServletException | IOException | MessagingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				return;
+			} else if(action.equals(ActionConstant.DOI_MAT_KHAU)) {
+				postDoiMatKhau(req, res);
+				return;
 			}
 		}
 	}
 	
+	
+	private void postDoiMatKhau(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+		CommonDTO commonDTO = ConvertUtil.toModelOfController(CommonDTO.class, req);
+		ResetPasswordEntity rsEntity = resetPasswordService.findByEmailAndToken(commonDTO.getEmail(), commonDTO.getToken());
+		if(rsEntity != null) {
+			UserEntity user = new UserEntity();
+			userService2.findByEmail(commonDTO.getEmail());
+			user.setId(userService2.findByEmail(commonDTO.getEmail()).getId());
+			user.setEmail(commonDTO.getEmail());
+			user.setPassword(commonDTO.getPassword());
+			userService2.update(user);
+			DispatcherUtil.redirect(req, res, "/login?action=login&message=capnhatmatkhauthanhcong");
+			return;
+		}
+		DispatcherUtil.redirect(req, res, "/");
+	}
+
+
 	ResourceBundle resourceBundle = ResourceBundle.getBundle("message");
 	
 	private void setMessage(HttpServletRequest req) {
@@ -133,4 +192,25 @@ public class SigninSignupController extends HttpServlet {
 			DispatcherUtil.redirect(req, res, "/register?action=register");
 		}
 	}
+	
+	private void postQuenMatKhau(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException, MessagingException {
+		CommonDTO commonDTO = ConvertUtil.toModelOfController(CommonDTO.class, req);
+		String email = commonDTO.getEmail();
+		if(!StringUtil.isNullOrEmpty(email)) {
+			UserEntity userEntity = userService2.findByEmail(email);
+			if(userEntity != null) {
+				String token = StringUtil.randomString(10);
+				ResetPasswordEntity rspw = new ResetPasswordEntity();
+				rspw.setEmail(email);
+				rspw.setToken(token);
+				resetPasswordService.insertOne(rspw);
+				String html = "<h2>Token của bạn là</h2><p>" + token + "</p>";
+				MailUtil.sendAsHtml(email, "[Trainee manager] Reset password", html);
+				DispatcherUtil.redirect(req, res, "/doi-mat-khau?action=doimatkhau");
+				return;
+			}
+		}
+		DispatcherUtil.redirect(req, res, "/quen-mat-khau?action=quenmatkhau&message=sai_email");
+	}
+
 }

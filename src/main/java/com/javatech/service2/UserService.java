@@ -31,7 +31,8 @@ public class UserService {
 
 	//
 	public List<UserEntity> findByEmailAndPassword(String userName, String password) {
-		return userDao.selecList(userName, password);
+		String sql = "select * from users where email = ? and password = ?";
+		return userDao.selecList(sql, userName, password);
 	}
 
 	public Integer register(UserEntity userEntity) {
@@ -62,5 +63,14 @@ public class UserService {
 	public List<UserEntity> selectList(){
 		String sql = "select username, email, id from users";
 		return userDao.selecList(sql);
+	}
+
+	public UserEntity findByEmail(String email) {
+		String sql = "select * from users where email = ? ";
+		List<UserEntity> userEntities = userDao.selecList(sql, email);
+		if(userEntities.size() > 0) {
+			return userEntities.get(0);
+		}
+		return null;
 	}
 }

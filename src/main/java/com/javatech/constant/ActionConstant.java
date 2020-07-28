@@ -5,6 +5,8 @@ public interface  ActionConstant {
 	public static final String LOGIN = "login";
 	public static final String REGISTER = "register";
 	public static final String LOGOUT = "logout";
+	public static final Object QUEN_MAT_KHAU = "quenmatkhau";
+	public static final Object DOI_MAT_KHAU = "doimatkhau";
 	
 	public static final String THANH_VIEN = "thanhvien";
 	public static final String CHO_DUYET = "choduyet";
@@ -54,6 +56,8 @@ public interface  ActionConstant {
 	
 	public static final Object SAVE_THONG_TIN_DANG_KY_LICH = "save_thong_tin_dang_ky_lich";
 	public static final Object SAVE_THONG_TIN_DEADLINE = "save_thong_tin_deadline";
+
+
 	
 	public static interface KHOA_HOC {
 		public static final String CHI_TIET_KHOA_HOC = "chi_tiet_khoa_hoc";
