@@ -267,6 +267,17 @@
 							name="dob" title="Date of birth">
 					</div>
 				</div>
+				
+				<div class="form-group row" style="margin-left: 5px;">
+					<label for="dob" class="col-sm-3 col-form-label"> Quyền: </label>
+					<div class="col-sm-9">
+						<select class="form-control form-control-user ModalSizeInput" name="roleId">
+							<c:forEach items="${roles}" var="role">
+							 	<option value="${role.id}">${role.code}</option>
+							</c:forEach>
+						</select>
+					</div>
+				</div>
 
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary"

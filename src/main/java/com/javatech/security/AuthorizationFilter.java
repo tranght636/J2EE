@@ -19,8 +19,8 @@ import com.javatech.utils.SessionUtil;
 public class AuthorizationFilter implements Filter {
 	
 	private String[] urlPermit = {"/login" , "/register", "/template", "/img", "/quen-mat-khau", "/doi-mat-khau"};
-
-    @SuppressWarnings("unused")
+	
+	@SuppressWarnings("unused")
 	private ServletContext context;
 
     @Override
@@ -53,7 +53,8 @@ public class AuthorizationFilter implements Filter {
         UserModel model = (UserModel) SessionUtil.getInstance().getValue(request, "USERMODEL");
         if (model != null) {
         	if (url.startsWith("/admin")) {
-        		if (model.getRole().getCode().equals(SystemConstant.ADMIN_ROLE)) {
+        		if (model.getRole().getCode().equals(SystemConstant.ADMIN_ROLE)
+        			|| model.getRole().getCode().equals("ctv")) {
                     filterChain.doFilter(servletRequest, servletResponse);
                 } else if (model.getRole().getCode().equals(SystemConstant.USER_ROLE)) {
                     response.sendRedirect(request.getContextPath()+"/login?action=login&message=not_permission&alert=danger");

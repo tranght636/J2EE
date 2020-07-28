@@ -11,15 +11,16 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.javatech.service2.UserService;
 import com.javatech.constant.ActionConstant;
+import com.javatech.dao2.RoleDao;
+import com.javatech.entity.RoleEntity;
 import com.javatech.model.ClassModel;
 import com.javatech.model.UserModel;
 import com.javatech.service.IClassService;
 import com.javatech.service.IUserService;
+import com.javatech.service2.UserService;
 import com.javatech.utils.ConvertUtil;
 import com.javatech.utils.DispatcherUtil;
-import com.javatech.utils.HttpUtil;
 
 @WebServlet(urlPatterns = { "/admin/thanh-vien", "/admin/thanh-vien-cho-duyet" })
 public class ThanhVienController extends HttpServlet {
@@ -30,6 +31,9 @@ public class ThanhVienController extends HttpServlet {
 	IClassService classService;
 	@Inject
 	UserService userService2;
+	
+	@Inject
+	RoleDao roleDao;
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
@@ -151,6 +155,8 @@ public class ThanhVienController extends HttpServlet {
 
 		req.setAttribute("dsThanhVien", dsThanhVien);
 		req.setAttribute("dsClass", dsClass);
+		List<RoleEntity> roles = roleDao.selectAll();
+		req.setAttribute("roles", roles);
 		DispatcherUtil.returnViewNameAdminAndSetPageName(req, res, "ThanhVien");
 	}
 
