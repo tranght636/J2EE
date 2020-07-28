@@ -61,7 +61,7 @@
 			<tbody>
 				<c:forEach var="i" items="${dsDangKyLich}">
 					<tr>
-						<td>${i.className }</td>
+						<td>${i.weekInYear }</td>
 						<td><c:if test='${i.schedule.contains("S2")}'>x</c:if></td>
 						<td><c:if test='${i.schedule.contains("C2")}'>x</c:if></td>
 						<td><c:if test='${i.schedule.contains("S3")}'>x</c:if></td>
