@@ -13,6 +13,8 @@
     <decorator name="login" page="login.jsp">
         <pattern>/login*</pattern>
         <pattern>/register*</pattern>
+        <pattern>/quen-mat-khau*</pattern>
+        <pattern>/doi-mat-khau*</pattern>
     </decorator>
     
     <decorator name="web" page="web.jsp">
